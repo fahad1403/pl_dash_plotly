@@ -9,7 +9,8 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 import constants as cn
 
-credentials = service_account.Credentials.from_service_account_info(cn.service_account_info)
+# credentials = service_account.Credentials.from_service_account_info(cn.service_account_info)
+credentials = st.secrets["gcp_service_account"]
 service = build('drive', 'v3', credentials=credentials)
 
 def read_data(name, id):
