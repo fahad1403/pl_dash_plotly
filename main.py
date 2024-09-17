@@ -198,34 +198,45 @@ color_map = {
     'verified': '#bfe3bf'     # verification-verified (light green)
 }
 
-fig_verifications = px.line(
-    user_counts, 
-    x='day', 
-    y='percentage_of_users', 
-    color='verification_status', 
-    labels={'day': 'Day of Attempted Verification', 'percentage_of_users': '% of Users'},
-    title = f'IDV Verification Status per Day: Daily user verification status trends for PL for the month of {current_month}',
-    color_discrete_map=color_map,
-    markers=True,  
-    line_shape='spline',  
-    text='percentage_of_users'
+import pandas as pd
+import plotly.express as px
+
+grouped_data = user_counts.groupby(['day', 'verification_status'])['user_id'].sum().reset_index()
+pivot_data = grouped_data.pivot(index='day', columns='verification_status', values='user_id').fillna(0)
+pivot_data['hover_text'] = pivot_data.apply(
+    lambda row: ' | '.join([f"{status}: {int(row[status])}" for status in pivot_data.columns]), 
+    axis=1
 )
 
+if 'hover_text' in user_counts.columns:
+    user_counts = user_counts.drop(columns=['hover_text'])
+
+user_counts = user_counts.merge(pivot_data[['hover_text']], on='day', how='left')
+
+fig_verifications = px.line(user_counts, 
+              x='day', 
+              y='percentage_of_users', 
+              color='verification_status', 
+              labels={'day': 'Day of Attempted Verification', 'percentage_of_users': '% of Users'},
+              title='Verification Status per Day',
+              color_discrete_map=color_map,
+              markers=True,  
+              line_shape='spline',  
+              text='percentage_of_users'  
+             )
+for trace in fig_verifications.data:
+    verification_status = trace.name
+    trace_text = user_counts[user_counts['verification_status'] == verification_status]['percentage_of_users'].round(0).astype(int).astype(str) + '%'
+    trace.text = trace_text
+    trace.textposition = 'top right'
 
 for trace in fig_verifications.data:
-    
     verification_status = trace.name
-    filtered_data = user_counts[user_counts['verification_status'] == verification_status]
-    trace.text = filtered_data['percentage_of_users'].round(0).astype(int).astype(str) + '%'
-    trace.textposition = 'top right'
     
-    
-    trace.customdata = filtered_data['user_id']  
-    trace.hovertemplate = (
-        'Day: %{x}<br>' +
-        '% of Users: %{y:.0f}%<br>' + 
-        'User Count: %{customdata}'
-    )
+    hover_text_filtered = user_counts[user_counts['verification_status'] == verification_status]['hover_text']
+    trace.hovertext = hover_text_filtered
+
+fig_verifications.update_traces(marker=dict(size=8), hovertemplate='%{hovertext}<extra></extra>', textposition='top right')
 
 fig_verifications.update_layout(
     title={
@@ -237,7 +248,6 @@ fig_verifications.update_layout(
     }
 )
 
-fig_verifications.update_traces(marker=dict(size=8), textposition='top right')
 fig_verifications.update_xaxes(tickmode='linear', dtick=1)
 
 
