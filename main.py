@@ -12,6 +12,8 @@ service_account_info = st.secrets["gcp_service_account"]
 credentials = service_account.Credentials.from_service_account_info(service_account_info)
 service = build('drive', 'v3', credentials=credentials)
 
+SG = "PL"
+
 def read_data(name, id):
     file_id = id
     request = service.files().get_media(fileId=file_id)
