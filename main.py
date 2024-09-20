@@ -548,7 +548,7 @@ metrics_html = f"""
             <h3>{total_paid} QAR</h3>
         </div>
         <div class="summary-box">
-            <p>Percentace Miss Rate</p>
+            <p>Percentage Miss Rate</p>
             <h3>{percentage_miss_rate}</h3>
         </div>
         <div class="summary-box">
@@ -759,7 +759,7 @@ components.html(metrics_html, height=330, scrolling=True)
 st.plotly_chart(fig_loan, use_container_width=True)
 components.html(metrics_verif_html, height=170, scrolling=True)
 st.plotly_chart(fig_verifications, use_container_width=True)
-components.html(metrics_payments, height=170, scrolling=True)
+components.html(metrics_payments, height=190, scrolling=True)
 st.plotly_chart(fig_loan_active, use_container_width=True)
 components.html(metrics_average_loan, height=170, scrolling=True)
 st.plotly_chart(fig_aov, use_container_width=True)
