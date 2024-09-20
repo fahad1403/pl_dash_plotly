@@ -525,6 +525,7 @@ metrics_html = f"""
         }}
         .summary-box {{
             font-family: Arial, sans-serif;
+            font-size: 15px;
         }}
     </style>
 </head>
