@@ -277,9 +277,7 @@ fig_verifications.update_layout(
 )
 
 fig_verifications.update_xaxes(tickmode='linear', dtick=1)
-
-
-
+fig_verifications.update_yaxes(range=[0, 120])
 
 
 #######################################################################################################################################################
@@ -525,6 +523,9 @@ metrics_html = f"""
             font-family: Arial, sans-serif;
             margin-bottom: 15px;
         }}
+        .summary-box {{
+            font-family: Arial, sans-serif;
+        }}
     </style>
 </head>
 <body>
@@ -597,6 +598,7 @@ metrics_verif_html = f"""
             margin: 0;
             font-size: 1em;
             color: #333333;
+            font-family: Arial, sans-serif;
         }}
         .verification-box h3 {{
             font-size: 2em;
@@ -669,6 +671,9 @@ metrics_payments = f"""
             font-family: Arial, sans-serif;
             margin-bottom: 15px;
         }}
+        .summary-box {{
+            font-family: Arial, sans-serif;
+        }}
     </style>
 </head>
 <body>
@@ -731,6 +736,9 @@ metrics_average_loan = f"""
             color: gray;
             font-family: Arial, sans-serif;
             margin-bottom: 15px;
+        }}
+        .summary-box {{
+            font-family: Arial, sans-serif;
         }}
     </style>
 </head>
