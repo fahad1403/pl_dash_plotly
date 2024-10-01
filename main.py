@@ -7,7 +7,7 @@ import io
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
-
+from datetime import datetime
 service_account_info = st.secrets["gcp_service_account"]
 credentials = service_account.Credentials.from_service_account_info(service_account_info)
 service = build('drive', 'v3', credentials=credentials)
@@ -34,11 +34,15 @@ read_data('healthy_book', '15GNAzusvoY6YJ6T-jPu8cmTk3722nBV6')
 read_data('installment_schedule', '1fKodQFQfa7ZCSSO-mwEFPZLSnzWLPyoZ')
 read_data('total_installment_summary', '1yImlbxW8YI5457OW8bzvugzP9P1Uty9g')
 
+from datetime import datetime
+current_date = datetime.now()
+current_month = current_date.strftime("%B")
 
 # df = pd.read_csv('risk_dumps/historical_loans_PL.csv')
 
 df = df[df['which_month']=='current_month']
-if df.shape[0] == 0:
+current_date = datetime.now()
+if current_date.day == 1:
     read_data('df', '1hhKTlbfOY4t7Xn1l9FKmyvxT1SaNaQQz')
     df = df[df['which_month']=='last_month']
     df['created_datetime_dubai'] = pd.to_datetime(df['created_datetime_dubai'], errors='coerce')
@@ -64,7 +68,8 @@ summary['percentage_loan_disbursed'] = (summary['total_loan_disbursed'] / summar
 # dd = pd.read_csv('risk_dumps/PL_Installments_Report_daily.csv')
 dd = dd[dd['which_month'] == 'current_month']
 dd['Order Date (UTC Time)'] = pd.to_datetime(dd['Order Date (UTC Time)'])
-if dd.shape[0]==0:
+current_date = datetime.now()
+if current_date.day == 1:
     read_data('dd', '1v1jIqtERNMy2-aSk_TihQY-r7WGDi9X3')
     dd = dd[dd['which_month'] == 'last_month']
     dd['Order Date (UTC Time)'] = pd.to_datetime(dd['Order Date (UTC Time)'])
@@ -91,9 +96,8 @@ df_verifications['attempted_at'] = pd.to_datetime(df_verifications['attempted_at
 df_verifications['day'] = df_verifications['attempted_at'].dt.day
 df_verifications['created_at'] = pd.to_datetime(df_verifications['created_at'], errors='coerce')
 df_verifications['month'] = df_verifications['created_at'].dt.strftime('%B')
-try:
-   current_month= df_verifications['month'].dropna().unique()[0]
-except: 
+current_date = datetime.now()
+if current_date.day == 1:
     read_data('df_verifications', '1ydq4pdNkRH-oiKaJ_hcKAEZ2bjlDdry_')
     df_verifications = df_verifications[df_verifications['which_month'] == 'last_month']
     df_verifications['attempted_at'] = pd.to_datetime(df_verifications['attempted_at'])
@@ -126,7 +130,10 @@ user_counts['percentage_of_users'] = (user_counts['user_id'] / user_counts['tota
 healthy_book = healthy_book[healthy_book['which_month']=='current_month']
 healthy_book['created_at'] = pd.to_datetime(healthy_book['created_at'])
 healthy_book['day_of_created_date'] = healthy_book['created_at'].dt.day
-if healthy_book.shape[0]==0:
+
+from datetime import datetime
+current_date = datetime.now()
+if current_date.day == 1:
     read_data('healthy_book', '15GNAzusvoY6YJ6T-jPu8cmTk3722nBV6')
     healthy_book = healthy_book[healthy_book['which_month']=='last_month']
     healthy_book['created_at'] = pd.to_datetime(healthy_book['created_at'])
@@ -202,7 +209,8 @@ average_loan_this_month = f"{healthy_book['aov_aed'].mean():,.0f}"
 
 missed = missed[missed['which_month']=='current_month']
 missed['inst_due_at'] = pd.to_datetime(missed['inst_due_at'], errors='coerce')
-if missed.shape[0] == 0:
+current_date = datetime.now()
+if current_date.day == 1:
     read_data('missed', '1pC1o2Pp2ZKX9tsOWOdepJP2q2N0ToAD5')
     missed = missed[missed['which_month']=='last_month']
     missed['inst_due_at'] = pd.to_datetime(missed['inst_due_at'], errors='coerce')
